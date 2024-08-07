@@ -1,8 +1,10 @@
 package com.example.music.service;
 
 import com.example.music.dto.Message;
+import com.example.music.exception.SongNotFoundException;
 import com.example.music.model.Song;
 import com.example.music.model.Comment;
+import com.example.music.model.User;
 import com.example.music.repository.SongRepository;
 import com.example.music.repository.CommentRepository;
 import com.example.music.repository.UserRepository;
@@ -22,7 +24,7 @@ public class CommentServiceImpl implements CommentService{
     @Override
     public List<Comment> findBySongOrderByCreatedAtDesc(Long songId) {
         Song song = songRepository.findById(songId).orElseThrow(
-                () -> new RuntimeException("Song not found")
+                () -> new SongNotFoundException("Song not found with id: " + songId)
         );
         return commentRepository.findBySongOrderByCreatedAtDesc(song);
     }
@@ -31,18 +33,18 @@ public class CommentServiceImpl implements CommentService{
     public Message addComment(Message message) {
         Comment comment = new Comment();
         Song song = songRepository.findById(message.getSongId()).orElseThrow(
-                () -> new RuntimeException("Song not found")
+                () -> new SongNotFoundException("Song not found with id: " + message.getSongId())
         );
-        String username = userRepository.findByEmail(message.getUsername()).getUsername();
+        User user = userRepository.findByEmail(message.getUsername());
         comment.setSong(song);
         comment.setContent(message.getContent());
-        comment.setUsername(username);
+        comment.setUser(user);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
         comment.setCreatedAt(LocalDateTime.now().format(formatter));
-
         commentRepository.save(comment);
         message.setCreatedAt(comment.getCreatedAt());
-        message.setUsername(username);
+        message.setUsername(user.getUsername());
+        message.setAvatarUrl(user.getAvatarURL());
         return message;
     }
 }
