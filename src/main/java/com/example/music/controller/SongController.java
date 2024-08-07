@@ -23,8 +23,10 @@ public class SongController {
     private UserService userService;
 
     @GetMapping("/")
-    public String index(Model model) {
+    public String index(Model model, Principal principal) {
         model.addAttribute("songs", songService.findAll());
+        model.addAttribute("userId", userService.findByEmail(principal.getName()).getId());
+        model.addAttribute("user", userService.findByEmail(principal.getName()));
         return "index";
     }
 
@@ -41,17 +43,10 @@ public class SongController {
         return "redirect:/";
     }
 
-    @GetMapping("/mySongs")
-    private String mySongs(Principal principal, Model model) {
-        User user = userService.findByEmail(principal.getName());
-        model.addAttribute("songs", songService.findSongsByUser(user));
-        return "mySongs";
-    }
-
     @DeleteMapping("/delete")
-    public String deleteSong(@RequestParam Long songId) {
+    public String deleteSong(@RequestParam Long songId, Principal principal) {
         songService.deleteSong(songId);
-        return "redirect:/mySongs";
+        return "redirect:/profile/" + userService.findByEmail(principal.getName()).getId();
     }
 
     @GetMapping("/edit")
@@ -65,13 +60,15 @@ public class SongController {
     public String updateSong(@RequestParam Long id, @RequestParam String title, @RequestParam String artist,
                               @RequestParam String genre, @RequestParam("audioFile") MultipartFile file) throws IOException {
         songService.updateSong(id, title, artist, genre, file);
-        return "redirect:/mySongs";
+        return "redirect:/profile/" + id;
     }
 
     @GetMapping("/search")
-    public String search(@RequestParam("query") String query, Model model) {
+    public String search(@RequestParam("query") String query, Model model, Principal principal) {
         List<Song> songs = songService.searchSongs(query);
         model.addAttribute("songs", songs);
+        model.addAttribute("userId", userService.findByEmail(principal.getName()).getId());
+        model.addAttribute("user", userService.findByEmail(principal.getName()));
         return "index";
     }
 }
