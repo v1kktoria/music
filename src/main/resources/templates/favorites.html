@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Favorites</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="/js/musicPlayer.js"></script>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -21,7 +23,9 @@
                         <p>Likes: <span th:text="${song.likes}">0</span></p>
                     </div>
                 </div>
-                <audio class="audio-player" controls>
+                <audio id="audio-player" class="audio-player" controls th:data-song-name="${song.title}"
+                       th:data-song-image="${song.imageURL}" th:data-song-artist="${song.artist}"
+                       th:data-song-id="${song.id}">
                     <source th:src="@{/uploads/{filename}(filename=${song.getAudioPath()})}" type="audio/mpeg">
                     Your browser does not support the audio element.
                 </audio>
@@ -29,12 +33,29 @@
                     <input type="hidden" name="_method" value="DELETE"/>
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                     <input type="hidden" name="songId" th:value="${song.id}"/>
-                    <button type="submit" class="btn btn-danger">Remove from Favorites</button>
+                    <button type="submit" class="btn btn-logout">Remove from Favorites</button>
                 </form>
             </li>
         </th:block>
     </ul>
-    <a href="/" class="btn btn-secondary mt-3">Back to Home</a>
+    <a href="/" class="btn btn-custom">Back to Home</a>
+</div>
+<div class="music-player">
+    <div class="d-flex align-items-center">
+        <img id="current-album-cover" src="" alt="Album Cover" class="album-cover">
+        <div class="song-info ml-3">
+            <h2 id="current-song-name" class="song-name">Song Title</h2>
+            <p id="current-song-artist" class="song-artist">Artist Name</p>
+        </div>
+    </div>
+    <div class="controls-wrapper">
+        <div class="controls">
+            <button id="prev-button" class="btn-audio"><i class="ph-bold ph-skip-back"></i></button>
+            <button id="play-pause-button" class="btn-audio"><i id="play-pause-icon" class="ph-bold ph-play"></i></button>
+            <button id="next-button" class="btn-audio"><i class="ph-bold ph-skip-forward"></i></button>
+            <button id="repeat-button" class="btn-audio"><i class="ph-bold ph-repeat"></i></button>
+        </div>
+    </div>
 </div>
 </body>
 </html>
