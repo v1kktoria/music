@@ -10,4 +10,5 @@ public class Message {
     private String username;
     private Long songId;
     private String createdAt;
+    private String avatarUrl;
 }
