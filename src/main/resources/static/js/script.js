@@ -25,9 +25,14 @@ document.addEventListener('DOMContentLoaded', function () {
             const commentElement = document.createElement('div');
             commentElement.className = 'comment';
             commentElement.innerHTML = `
-                <p>${commentData.username}</p>
-                <p>${commentData.content}</p>
-                <p class="text-muted">${commentData.createdAt}</p>
+                <div class="comment-header">
+                    <img src=${commentData.avatarUrl} alt="User's avatar" class="avatar">                                    
+                    <div class="comment-info">
+                        <p>${commentData.username}</p>
+                        <p>${commentData.content}</p>
+                        <p class="text-muted">${commentData.createdAt}</p>
+                    </div>
+                </div>
             `;
 
             commentSection.insertBefore(commentElement, commentSection.firstChild);
@@ -37,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.querySelectorAll('.comment-form').forEach(form => {
-        form.addEventListener('submit', function(event) {
+        form.addEventListener('submit', function (event) {
             event.preventDefault();
 
             const formData = new FormData(this);
@@ -50,9 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
             this.querySelector('textarea').value = '';
         });
     });
-});
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.comment-toggle').forEach(button => {
+    document.querySelectorAll('.btn-custom-primary').forEach(button => {
         button.addEventListener('click', function () {
             const commentSection = this.closest('.button-group').nextElementSibling;
             const content = commentSection.querySelector('.comment-content');
