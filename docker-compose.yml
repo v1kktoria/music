@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  service-db:
+    image: 'postgres:15'
+    container_name: 'postgres'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: musicDB
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: music
+    ports:
+      - "8080:8080"
+    depends_on:
+      - service-db
+    environment:
+        SPRING_DATASOURCE_URL: jdbc:postgresql://service-db/musicDB
+        SPRING_DATASOURCE_USERNAME: postgres
+        SPRING_DATASOURCE_PASSWORD: 1234
+        SPRING_JPA_HIBERNATE_DDL_AUTO: update
+        SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE: 10MB
+        SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE: 10MB
+    volumes:
+      - type: bind
+        source: C:/uploads
+        target: /app/uploads
+volumes:
+  pgdata:
