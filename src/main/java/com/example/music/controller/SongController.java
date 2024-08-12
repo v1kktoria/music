@@ -37,8 +37,8 @@ public class SongController {
 
     @PostMapping("/addSong")
     public String addSong(@RequestParam String title, @RequestParam String artist, @RequestParam String genre,
-                           @RequestParam("audioFile") MultipartFile file, @RequestParam String imageURL, @AuthenticationPrincipal UserDetails userDetails) throws IOException {
-        User user = userService.findByEmail(userDetails.getUsername());
+                           @RequestParam("audioFile") MultipartFile file, @RequestParam String imageURL, Principal principal) throws IOException {
+        User user = userService.findByEmail(principal.getName());
         songService.saveSong(title, artist, genre, imageURL, file, user);
         return "redirect:/";
     }
@@ -58,9 +58,9 @@ public class SongController {
 
     @PutMapping("/edit")
     public String updateSong(@RequestParam Long id, @RequestParam String title, @RequestParam String artist,
-                              @RequestParam String genre, @RequestParam("audioFile") MultipartFile file) throws IOException {
+                              @RequestParam String genre, @RequestParam("audioFile") MultipartFile file, Principal principal) throws IOException {
         songService.updateSong(id, title, artist, genre, file);
-        return "redirect:/profile/" + id;
+        return "redirect:/profile/" + userService.findByEmail(principal.getName()).getId();
     }
 
     @GetMapping("/search")

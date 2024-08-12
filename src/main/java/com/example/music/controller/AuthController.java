@@ -19,13 +19,13 @@ public class AuthController {
     @GetMapping("/signin")
     public String signinForm(Model model) {
         model.addAttribute("user", new User());
-        return "signin";
+        return "login";
     }
 
     @GetMapping("/signup")
     public String signupForm(Model model) {
         model.addAttribute("user", new User());
-        return "signup";
+        return "register";
     }
 
     @GetMapping("/signout")
@@ -37,7 +37,7 @@ public class AuthController {
     public String signup(@ModelAttribute User user, Model model) throws Exception {
         if (userService.userExists(user.getEmail())) {
             model.addAttribute("error", "User already exists with email " + user.getEmail());
-            return "signup";
+            return "register";
         }
         userService.saveUser(user);
         return "redirect:/auth/signin";
