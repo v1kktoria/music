@@ -18,17 +18,16 @@
 <div class="container">
     <div class="header-container">
         <div class="btn-container">
-            <a th:href="@{/profile/{userId}(userId=${userId})}" class="btn btn-custom">Profile</a>
-            <a href="/favorite" class="btn btn-custom">My Favorites</a>
-            <a href="/add" class="btn btn-custom">Add Song</a>
+            <a th:href="@{/profile/{userId}(userId=${userId})}" class="btn btn-custom" target="_blank">Profile</a>
+            <a href="/favorite" class="btn btn-custom" target="_blank">My Favorites</a>
+            <a href="/add" class="btn btn-custom" target="_blank">Add Song</a>
             <form action="/auth/signout" method="post" class="d-inline">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <button type="submit" class="btn btn-logout">Logout</button>
             </form>
         </div>
-        <!-- User Info Block -->
         <div class="user-info d-flex align-items-center">
-            <a th:href="@{/profile/{userId}(userId=${userId})}">
+            <a th:href="@{/profile/{userId}(userId=${userId})}" target="_blank">
                 <img id="user-avatar" th:src="${user.avatarURL}" alt="User Avatar" class="rounded-circle">
             </a>
             <span th:text="${user.username}" id="user-name">Username</span>
@@ -75,7 +74,7 @@
                         <th:block th:each="comment : ${song.getComments()}">
                             <div class="comment">
                                 <div class="comment-header">
-                                    <a th:href="@{/profile/{id}(id=${comment.user.id})}">
+                                    <a th:href="@{/profile/{id}(id=${comment.user.id})}" target="_blank">
                                         <img th:src="${comment.user.avatarURL}" alt="User's avatar" class="avatar">
                                     </a>
                                     <div class="comment-info">
