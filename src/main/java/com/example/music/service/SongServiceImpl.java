@@ -26,7 +26,7 @@ public class SongServiceImpl implements SongService {
     private SongRepository songRepository;
     private UserRepository userRepository;
     private CommentRepository commentRepository;
-    private final Path uploadDir = Paths.get("C:\\uploads");
+    private final Path uploadDir = Paths.get("/app/uploads");
 
     @Override
     public void saveSong(String title, String artist, String genre, String imageURL, MultipartFile file, User user) throws IOException {
@@ -68,11 +68,15 @@ public class SongServiceImpl implements SongService {
             if (Files.exists(oldFilePath)) {
                 Files.delete(oldFilePath);
             }
-            String newFilename = file.getOriginalFilename();
-            Path newFilePath = uploadDir.resolve(newFilename);
+            String originalFilename = file.getOriginalFilename();
+            if (originalFilename == null) {
+                originalFilename = "default_file";
+            }
+            String uniqueFilename = UUID.randomUUID() + "_" + originalFilename;
+            Path newFilePath = uploadDir.resolve(uniqueFilename);
             Files.createDirectories(newFilePath.getParent());
             file.transferTo(newFilePath.toFile());
-            song.setAudioPath(newFilename);
+            song.setAudioPath(uniqueFilename);
         }
         songRepository.save(song);
     }
