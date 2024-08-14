@@ -30,8 +30,7 @@ services:
         SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE: 10MB
         SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE: 10MB
     volumes:
-      - type: bind
-        source: C:/uploads
-        target: /app/uploads
+      - appdata:/app/uploads
 volumes:
   pgdata:
+  appdata:
